@@ -1,0 +1,20 @@
+{
+  "name": "nodemaileruser",
+  "version": "1.0.0",
+  "description": "project to test if I can recieve emails from user using express js, nodemailer js, and html forms",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "ThatSombraCoder <ThatSombraCoder@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "method-override": "^3.0.0",
+    "nodemailer": "^6.9.3"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.0"
+  }
+}
