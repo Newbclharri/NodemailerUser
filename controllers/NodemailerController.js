@@ -5,11 +5,11 @@ require("dotenv").config();
 const express = require("express");
 const nodemailer = require("nodemailer");
 const path = require("path");
-const { mainModule } = require("process");
 
 const EMAIL = process.env.EMAIL;
 const EMAIL2 = process.env.EMAIL2;
 const PASS = process.env.PASS;
+const PASS3 = process.env.PASS3;
 
 /////////////////
 // Create Router Object
@@ -63,49 +63,42 @@ router.get("/contact", (req, res)=>{
 });
 
 router.post("/contact", (req, res)=>{ 
-    console.log(req.body)
+    console.log("req.body: ", req.body)
     const contents = req.body
     if(!contents){
         return res.status(400).send({status: "failed"});
-    }
-    res.status(200).send({
-        status: "success",
-        contents: contents
-    })   
-    // await sendEmail()
-    //     .then(response => res.send(response.message))
-    //     .catch(err => res.status(500).send(err.message))    
+    }  
+    sendEmail(contents)
 });
 
 
 //////////////////
 // Nodemailer fxns
 //////////////////
-function sendEmail(){
-    return new Promise((resolve, reject)=>{
+function sendEmail(obj){
         const transporter = nodemailer.createTransport({
             host: "gmail",
             auth: {
-                user: EMAIL,
-                pass: PASS
+                user: "test@gmail.com",
+                pass: PASS3
             }
         });
         const info = {
-            from: EMAIL, // sender address
-            to: EMAIL, EMAIL2, // list of receivers
-            subject: "My Portfolio Inquiry",
-            text: "content"
+            from: "test@gmail.com", // sender address
+            to: "test2@gmail.com", // list of receivers
+            subject: `Message from ${obj.nameUser} <${obj.email}>: ${obj.subject}`,
+            text: obj.message
 
         };
         transporter.sendMail(info,(err, emailInfo)=>{
             if(err){
                 console.log("Error: ", err);
-                return reject({message: 'An error occured.'}); //returned from native catch method if there's an during Promise process
+               res.send('error');
+            }else{
+                console.log('Email sent ' + emailInfo.response);
+                res.send('success');
             }
-            return resolve({message:'Email sent successfully'}); //returned from native then method if Promise is successful    
-        });
-
-    });            
-    
+            
+        });    
 }
 module.exports = router;
