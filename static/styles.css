@@ -1,0 +1,32 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    border: solid red;
+}
+
+main{
+    width: 50%;
+}
+
+
+.email-form{
+    display:flex;
+    flex-direction: column;
+    margin: 0px auto;
+}
+
+
+.basic-info{
+    width: 20%
+}
+
+.text-area{
+    width: 50%
+}
+
+.button{
+    width: fit-content;
+    align-items: end;
+}
+

@@ -4,11 +4,13 @@
   "description": "project to test if I can recieve emails from user using express js, nodemailer js, and html forms",
   "main": "server.js",
   "scripts": {
+    "dev": "nodemon server.js",
     "test": "test"
   },
   "author": "ThatSombraCoder <ThatSombraCoder@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "method-override": "^3.0.0",
