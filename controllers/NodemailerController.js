@@ -62,13 +62,13 @@ router.get("/contact", (req, res)=>{
     })
 });
 
-router.post("/contact", (req, res)=>{ 
+router.post("/contact", async (req, res)=>{ 
     console.log("req.body: ", req.body)
     const contents = req.body
     if(!contents){
         return res.status(400).send({status: "failed"});
     }  
-    sendEmail(contents)
+    await sendEmail(contents);
 });
 
 
@@ -79,13 +79,13 @@ function sendEmail(obj){
         const transporter = nodemailer.createTransport({
             host: "gmail",
             auth: {
-                user: "test@gmail.com",
+                user: "clharri23@gmail.com",
                 pass: PASS3
             }
         });
         const info = {
-            from: "test@gmail.com", // sender address
-            to: "test2@gmail.com", // list of receivers
+            from: "clharri23@gmail.com", // sender address
+            to: "contactharrisc2@gmail.com", // list of receivers
             subject: `Message from ${obj.nameUser} <${obj.email}>: ${obj.subject}`,
             text: obj.message
 
@@ -93,10 +93,8 @@ function sendEmail(obj){
         transporter.sendMail(info,(err, emailInfo)=>{
             if(err){
                 console.log("Error: ", err);
-               res.send('error');
             }else{
                 console.log('Email sent ' + emailInfo.response);
-                res.send('success');
             }
             
         });    

@@ -25,7 +25,7 @@ form.addEventListener("submit", (e)=>{
     sendDataAjax(baseUrl, emailData)
 });
 
-async function sendDataXhrPromise(url, obj){
+function sendDataXhrPromise(url, obj){
     console.log(obj.subject, " submitted :)");
     return new Promise((resolve, reject)=>{
         const xhr = new XMLHttpRequest();
@@ -46,10 +46,10 @@ async function sendDataXhrPromise(url, obj){
     });        
 }
 
-function sendDataAjax(url, obj){
+async function sendDataAjax(url, obj){
     console.log(obj.subject, " submitted :)");
     if(!obj.message){return};
-    fetch("http://localhost:3000/contact",{
+    await fetch("http://localhost:3000/contact",{
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -76,67 +76,3 @@ function sendDataXhr(){
         }
         xhr.send(JSON.stringify(data));
 }
-
-// function sendDataXhrPromise(url, obj){
-//     console.log(obj.subject, " submitted :)");
-//     return new Promise((resolve, reject)=>{
-//         const xhr = new XMLHttpRequest();
-//         xhr.open("POST", url + "contact", true);
-//         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//         xhr.onload = function(){
-//             console.log("Response Text: ",xhr.responseText, typeof(xhr.responseText), xhr.status, xhr.readyState);
-//             if(xhr.readyState === 4 && xhr.status === 200){
-//                 resolve(`resolve ${xhr.response}`);
-//                 alert('Email sent');                
-
-//             }else{
-//                 alert("Alert: Error");
-//                 reject(`reject: ${xhr.statusText}`);
-//             }            
-//         }
-//         xhr.send(JSON.stringify(obj));
-//     });        
-// }
-
-// function sendDataXhrPromise(url, obj){
-//     console.log(obj.subject, " submitted :)");
-//     return new Promise((resolve, reject)=>{
-//         const xhr = new XMLHttpRequest();
-//         xhr.open("POST", url + "contact", true);
-//         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//         xhr.onload = function(){
-//             console.log("Response Text: ",xhr.responseText, typeof(xhr.responseText), xhr.status, xhr.readyState);
-//             if(xhr.readyState === 4 && xhr.status === 200){
-//                 resolve(`resolve ${xhr.response}`);
-//                 alert('Email sent');                
-
-//             }else{
-//                 alert("Alert: Error");
-//                 reject(`reject: ${xhr.statusText}`);
-//             }            
-//         }
-//         xhr.send(JSON.stringify(obj));
-//     });        
-// }
-
-
-// function sendDataXhrPromise(url, obj){
-//     console.log(obj.subject, " submitted :)");
-//     return new Promise((resolve, reject)=>{
-//         const xhr = new XMLHttpRequest();
-//         xhr.open("POST", url + "contact", true);
-//         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//         xhr.onload = function(){
-//             console.log("Response Text: ",xhr.responseText, typeof(xhr.responseText), xhr.status, xhr.readyState);
-//             if(xhr.readyState === 4 && xhr.status === 200){
-//                 resolve(`resolve ${xhr.response}`);
-//                 alert('Email sent');                
-
-//             }else{
-//                 alert("Alert: Error");
-//                 reject(`reject: ${xhr.statusText}`);
-//             }            
-//         }
-//         xhr.send(JSON.stringify(obj));
-//     });        
-// }
