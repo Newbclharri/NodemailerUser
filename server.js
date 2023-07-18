@@ -18,12 +18,12 @@ const PORT = process.env.PORT;
 /////////////
 //Middleware
 /////////////
-app.use(morgan("dev")); //log requests to server
 app.use(cors());
-app.use(methodOverride("__method")); //overide request methods for form submissions
+app.use("/static", express.static("static")); //serve files via express static route
 app.use(express.urlencoded({extended: true})) //parse html form bodies into req.body
 app.use(express.json()); //needed to receive data in JSON format from frontend client
-app.use("/static", express.static("static")); //serve files via express static route
+//app.use(methodOverride("__method")); //overide request methods for form submissions
+app.use(morgan("dev")); //log requests to server
 app.use(NodemailerRouter);
 
 //////////////

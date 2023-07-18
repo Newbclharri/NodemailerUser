@@ -4,10 +4,21 @@
 require("dotenv").config();
 const express = require("express");
 const nodemailer = require("nodemailer");
+const aws = require("@aws-sdk/client-ses");
+const defaultProvider = require("@aws-sdk/credential-provider-node");
+const ses = new aws.SES({
+    apiVersion: "2010-12-01",
+    region: "us-east-1",
+    defaultProvider
+});
+// const credentials = new aws.SharedIniFileCredentials({profile: 'ses'})
+// aws.config.credentials = credentials;
 const path = require("path");
-
 const EMAIL = process.env.EMAIL;
 const EMAIL2 = process.env.EMAIL2;
+const EMAIL3 = process.env.EMAIL3;
+const EMAILJ = process.env.EMAILJ;
+const EMAILJ2 = process.env.EMAILJ2;
 const PASS = process.env.PASS;
 const PASS3 = process.env.PASS3;
 
@@ -57,18 +68,21 @@ router.get("/contact", (req, res)=>{
         if(err){
             console.log(err);
         }else{
-            console.log("Sent ", fileName);
+            console.log("Sent: ", fileName);
         }
     })
 });
 
-router.post("/contact", async (req, res)=>{ 
-    console.log("req.body: ", req.body)
-    const contents = req.body
-    if(!contents){
-        return res.status(400).send({status: "failed"});
-    }  
-    await sendEmail(contents);
+router.post("/contact", (req, res)=>{ 
+    const contents = req.body;
+    console.log(contents)
+    // sendEmail(contents)
+    //     .then(data=> console.log(typeof(data)))
+    //     .catch(err => res.send(err.message));
+    // if(!contents){
+    //     return res.status(400).send({status: "failed"});
+    // }  
+    // await sendEmail(contents);
 });
 
 
@@ -76,27 +90,35 @@ router.post("/contact", async (req, res)=>{
 // Nodemailer fxns
 //////////////////
 function sendEmail(obj){
+    console.log(typeof(obj))
+    return new Promise((resolve, reject)=>{
         const transporter = nodemailer.createTransport({
-            host: "gmail",
-            auth: {
-                user: "clharri23@gmail.com",
-                pass: PASS3
-            }
+            SES: {ses,aws},
+            sendingRate: 1 //max 1 messages/second
         });
-        const info = {
-            from: "clharri23@gmail.com", // sender address
-            to: "contactharrisc2@gmail.com", // list of receivers
-            subject: `Message from ${obj.nameUser} <${obj.email}>: ${obj.subject}`,
-            text: obj.message
+        const mailConfigs = {
+            from: EMAIL, // sender address
+            to: EMAIL, // list of receivers
+            subject: String(obj.subject),
+            text: String(obj.message)
 
         };
-        transporter.sendMail(info,(err, emailInfo)=>{
-            if(err){
-                console.log("Error: ", err);
-            }else{
-                console.log('Email sent ' + emailInfo.response);
+        transporter.once('idle', ()=>{
+            if(transporter.isIdle()){
+                transporter.sendMail(mailConfigs,(err, info)=>{
+                    if(err){
+                        console.log("Error: ", err);
+                        reject({message: "An error occurred"});
+                    }else{
+                        console.log('Email sent ' + info.response);
+                        resolve(obj);
+                    }
+                    
+                });    
             }
-            
-        });    
+        })
+        
+    });
+        
 }
 module.exports = router;

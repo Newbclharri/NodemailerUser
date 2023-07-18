@@ -1,6 +1,6 @@
 
 console.log("connected");
-const baseUrl = "http://localhost:3000/"
+const baseUrl = "http://localhost:7000/"
 const form = document.querySelector("form");
 const nameUser = document.getElementById("name-field");
 const email = document.querySelector("#user-email");
@@ -9,7 +9,7 @@ const message = document.querySelector("#message-email");
 const button = document.getElementById("send");
 
 
-form.addEventListener("submit", (e)=>{
+form.addEventListener("submit", async (e)=>{
     e.preventDefault();
     const emailData = {
         nameUser: nameUser.value,
@@ -18,11 +18,21 @@ form.addEventListener("submit", (e)=>{
         message: message.value
     
     }
+    // const formData = new FormData(form);
+    // const encodedData = new URLSearchParams(formData);
+    console.log(emailData.message);
+    await fetch(baseUrl + "contact", {
+        method: "post",
+        headers: {
+           "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: String(emailData.message),
+    });
     // sendDataXhrPromise(baseUrl, emailData)
     // .then(console.log("data sent"))
     // .catch(err=>{console.log(err)})
 
-    sendDataAjax(baseUrl, emailData)
+    // sendDataAjax(baseUrl, emailData)
 });
 
 function sendDataXhrPromise(url, obj){
@@ -35,7 +45,8 @@ function sendDataXhrPromise(url, obj){
             console.log("Response Text: ",xhr.responseText, typeof(xhr.responseText), xhr.status, xhr.readyState);
             if(xhr.readyState === 4 && xhr.status === 200){                
                 alert('Email sent');
-                resolve(`resolve ${xhr.response}`);                
+                resolve(obj);
+                //resolve(`resolve: ${xhr.response}`)                
 
             }else{
                 alert("Alert: Error");
@@ -50,11 +61,11 @@ async function sendDataAjax(url, obj){
     console.log(obj.subject, " submitted :)");
     if(!obj.message){return};
     await fetch("http://localhost:3000/contact",{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(obj)
+        method: "post",
+        // headers: {
+        //     "Content-Type": "application/x-www-form-urlenconded",
+        // },
+        body: obj
     })
         .then(res=>console.log(res))
         .catch(err=>console.log(err));
