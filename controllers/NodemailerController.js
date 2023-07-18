@@ -75,14 +75,13 @@ router.get("/contact", (req, res)=>{
 
 router.post("/contact", (req, res)=>{ 
     const contents = req.body;
-    console.log(contents)
-    // sendEmail(contents)
-    //     .then(data=> console.log(typeof(data)))
-    //     .catch(err => res.send(err.message));
-    // if(!contents){
-    //     return res.status(400).send({status: "failed"});
-    // }  
-    // await sendEmail(contents);
+    console.log(contents.message)
+    sendEmail(contents)
+        .then(()=>{res.send("success")})
+        .catch(err => res.send(err.message));
+    if(!contents){
+        return res.status(400).send({status: "failed"});
+    }  
 });
 
 
@@ -94,29 +93,24 @@ function sendEmail(obj){
     return new Promise((resolve, reject)=>{
         const transporter = nodemailer.createTransport({
             SES: {ses,aws},
-            sendingRate: 1 //max 1 messages/second
         });
         const mailConfigs = {
             from: EMAIL, // sender address
-            to: EMAIL, // list of receivers
+            to: EMAILJ, // list of receivers
             subject: String(obj.subject),
             text: String(obj.message)
 
         };
-        transporter.once('idle', ()=>{
-            if(transporter.isIdle()){
-                transporter.sendMail(mailConfigs,(err, info)=>{
-                    if(err){
-                        console.log("Error: ", err);
-                        reject({message: "An error occurred"});
-                    }else{
-                        console.log('Email sent ' + info.response);
-                        resolve(obj);
-                    }
-                    
-                });    
+        transporter.sendMail(mailConfigs,(err, info)=>{
+            if(err){
+                console.log("Error: ", err);
+                reject({message: "An error occurred"});
+            }else{
+                console.log('Email sent ' + info.response);
+                resolve({message: "email sent successfuly"});
             }
-        })
+            
+        });  
         
     });
         
